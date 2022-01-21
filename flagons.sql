@@ -28,6 +28,8 @@ CREATE TABLE `TeamScore` (
     FOREIGN KEY(`teamId`) REFERENCES `Teams`(`id`)
 );
 
+DROP TABLE teamScores
+ 
 
 INSERT INTO `Teams` VALUES (null, 'Golden Gryphons');
 INSERT INTO `Teams` VALUES (null, 'Shrill Harpies');
@@ -51,3 +53,37 @@ INSERT INTO `TeamScore` VALUES (null, 2, 1, 1583873462376);
 INSERT INTO `TeamScore` VALUES (null, 2, 6, 1583873462376);
 INSERT INTO `TeamScore` VALUES (null, 2, 3, 1583873462376);
 
+ SELECT
+    ts.id,
+    ts.teamId,
+    ts.score,
+    ts.timeStamp,
+    t.name team_name
+    FROM TeamScore ts
+    JOIN Teams t 
+    ON t.id = ts.teamId
+                      
+
+
+Joining player because it has players AND has teamID to get team info name
+
+
+                       SELECT
+                            t.id,
+                            t.name,
+                            ts.teamId,
+                            ts.score,
+                            ts.timeStamp
+                        FROM Teams t
+                        JOIN TeamScore ts ON ts.teamId = t.id
+                        """
+
+
+
+
+ db_cursor.execute("""
+            SELECT
+                t.id,
+                t.name
+            FROM Teams t
+            """)

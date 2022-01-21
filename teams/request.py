@@ -1,18 +1,16 @@
-from models.player import Player
-from models.team_score import TeamScore
-from models.team import Team
+from models import Player, TeamScore, Team
 import sqlite3
 import json
 
 
-def get_teams(filters):
-    with sqlite3.connect("./flagons.db") as conn:
+def get_teams(filters): # get team with filters as the parameter 
+    with sqlite3.connect("./flagons.db") as conn: #this code connects to sql database
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
-        teams = {}
+        teams = {}   #team equals empty set so no repeating of same
 
-        if filters is None:
+        if filters is None:   #sending dictionary to json if filter is none
             db_cursor.execute("""
             SELECT
                 t.id,
@@ -30,9 +28,9 @@ def get_teams(filters):
             return json.dumps(teams)
 
 
-        else:
+        else: # if filter is _embed and related resource is teamscore?
             if "_embed" in filters:
-                for related_resource in filters['_embed']['resources']:
+                for related_resource in filters['_embed']['resources']: 
                     if related_resource == "teamScores":
                         db_cursor.execute("""
                         SELECT
@@ -41,7 +39,7 @@ def get_teams(filters):
                             ts.id score_id,
                             ts.teamId,
                             ts.score,
-                            ts.time_stamp
+                            ts.timeStamp
                         FROM Teams t
                         LEFT OUTER JOIN TeamScore ts ON ts.teamId = t.id
                         """)
@@ -61,7 +59,7 @@ def get_teams(filters):
                             team.scores.append(team_score.__dict__)
 
 
-                    elif related_resource == "players":
+                    elif related_resource == "players": 
                         db_cursor.execute("""
                         SELECT
                             t.id,
@@ -90,4 +88,3 @@ def get_teams(filters):
             for team in teams.values():
                 json_teams.append(team.__dict__)
             return json.dumps(json_teams)
-
